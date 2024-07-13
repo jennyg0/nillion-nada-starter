@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import GenerateUserKey from './nillion/components/GenerateUserKey';
-import CreateClient from './nillion/components/CreateClient';
-import * as nillion from '@nillion/client-web';
+import React, { useEffect, useState } from "react";
+import GenerateUserKey from "./nillion/components/GenerateUserKey";
+import CreateClient from "./nillion/components/CreateClient";
+import * as nillion from "@nillion/client-web";
 
-import { NillionClient, NadaValues } from '@nillion/client-web';
-import StoreSecretForm from './nillion/components/StoreSecretForm';
-import StoreProgram from './nillion/components/StoreProgramForm';
-import ComputeForm from './nillion/components/ComputeForm';
-import ConnectionInfo from './nillion/components/ConnectionInfo';
+import { NillionClient, NadaValues } from "@nillion/client-web";
+import StoreSecretForm from "./nillion/components/StoreSecretForm";
+import StoreProgram from "./nillion/components/StoreProgramForm";
+import ComputeForm from "./nillion/components/ComputeForm";
+import ConnectionInfo from "./nillion/components/ConnectionInfo";
 
 export default function Main() {
-  const programName = 'addition_simple';
-  const outputName = 'my_output';
-  const partyName = 'Party1';
+  const programName = "addition_simple";
+  const outputName = "my_output";
+  const partyName = "Party1";
   const [userkey, setUserKey] = useState<string | null>(null);
   const [client, setClient] = useState<NillionClient | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
@@ -42,12 +42,12 @@ export default function Main() {
       </p>
       <ConnectionInfo client={client} userkey={userkey} />
 
-      <h1>1. Connect to Nillion Client {client && ' ✅'}</h1>
+      <h1>1. Connect to Nillion Client {client && " ✅"}</h1>
       <GenerateUserKey setUserKey={setUserKey} />
 
       {userkey && <CreateClient userKey={userkey} setClient={setClient} />}
       <br />
-      <h1>2. Store Program {programId && ' ✅'}</h1>
+      <h1>2. Store Program {programId && " ✅"}</h1>
       {client && (
         <>
           <StoreProgram
@@ -58,30 +58,30 @@ export default function Main() {
         </>
       )}
       <br />
-      <h1>3. Store Secrets {storeId_my_int1 && storeId_my_int2 && ' ✅'}</h1>
+      <h1>3. Store Secrets {storeId_my_int1 && storeId_my_int2 && " ✅"}</h1>
       {userId && programId && (
         <>
-          <h2>Store my_int1 {storeId_my_int1 && ' ✅'}</h2>
+          <h2>Store my_int1 {storeId_my_int1 && " ✅"}</h2>
           <StoreSecretForm
-            secretName={'my_int1'}
+            secretName={"my_int1"}
             onNewStoredSecret={(secret) => setStoreId_my_int1(secret.storeId)}
             nillionClient={client}
-            secretType="SecretInteger"
+            secretType='SecretInteger'
             isLoading={false}
-            itemName=""
+            itemName=''
             hidePermissions
             defaultUserWithComputePermissions={userId}
             defaultProgramIdForComputePermissions={programId}
           />
 
-          <h2>Store my_int2 {storeId_my_int2 && ' ✅'}</h2>
+          <h2>Store my_int2 {storeId_my_int2 && " ✅"}</h2>
           <StoreSecretForm
-            secretName={'my_int2'}
+            secretName={"my_int2"}
             onNewStoredSecret={(secret) => setStoreId_my_int2(secret.storeId)}
             nillionClient={client}
-            secretType="SecretInteger"
+            secretType='SecretInteger'
             isLoading={false}
-            itemName=""
+            itemName=''
             hidePermissions
             defaultUserWithComputePermissions={userId}
             defaultProgramIdForComputePermissions={programId}
@@ -89,7 +89,7 @@ export default function Main() {
         </>
       )}
       <br />
-      <h1>4. Compute {computeResult && ' ✅'}</h1>
+      <h1>4. Compute {computeResult && " ✅"}</h1>
       {client &&
         programId &&
         storeId_my_int1 &&
