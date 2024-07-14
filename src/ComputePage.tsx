@@ -10,15 +10,14 @@ import ComputeForm from "./nillion/components/ComputeForm";
 import ConnectionInfo from "./nillion/components/ConnectionInfo";
 
 export default function Main() {
-  const programName = "addition_simple";
-  const outputName = "my_output";
-  const partyName = "Party1";
+  const programName = "meeting_cost";
+  const outputName = "total_cost";
+  const partyName = "official";
   const [userkey, setUserKey] = useState<string | null>(null);
   const [client, setClient] = useState<NillionClient | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [partyId, setPartyId] = useState<string | null>(null);
-  const [storeId_my_int1, setStoreId_my_int1] = useState<string | null>(null);
-  const [storeId_my_int2, setStoreId_my_int2] = useState<string | null>(null);
+  const [storeIds, setStoreIds] = useState<string[]>(Array(11).fill(""));
   const [programId, setProgramId] = useState<string | null>(null);
   const [additionalComputeValues, setAdditionalComputeValues] =
     useState<NadaValues | null>(null);
@@ -33,12 +32,21 @@ export default function Main() {
     }
   }, [userkey, client]);
 
+  const handleNewStoredSecret = (
+    index: number,
+    secret: { storeId: string }
+  ) => {
+    const newStoreIds = [...storeIds];
+    newStoreIds[index] = secret.storeId;
+    setStoreIds(newStoreIds);
+  };
+
   return (
     <div>
-      <h1>Blind Computation Demo</h1>
+      <h1>Meeting Cost Calculator</h1>
       <p>
         Connect to Nillion with a user key, then follow the steps to store a
-        program, store secrets, and compute on the secrets.
+        program, store salaries, and compute the total meeting cost.
       </p>
       <ConnectionInfo client={client} userkey={userkey} />
 
@@ -58,26 +66,34 @@ export default function Main() {
         </>
       )}
       <br />
-      <h1>3. Store Secrets {storeId_my_int1 && storeId_my_int2 && " ✅"}</h1>
+      <h1>
+        3. Store Salaries and Meeting Duration{" "}
+        {storeIds.every((id) => id) && " ✅"}
+      </h1>
       {userId && programId && (
         <>
-          <h2>Store my_int1 {storeId_my_int1 && " ✅"}</h2>
+          {[...Array(10).keys()].map((i) => (
+            <div key={i}>
+              <h2>
+                Store Yearly Salary {i + 1} {storeIds[i] && " ✅"}
+              </h2>
+              <StoreSecretForm
+                secretName={`yearly_salary${i}`}
+                onNewStoredSecret={(secret) => handleNewStoredSecret(i, secret)}
+                nillionClient={client}
+                secretType='SecretInteger'
+                isLoading={false}
+                itemName=''
+                hidePermissions
+                defaultUserWithComputePermissions={userId}
+                defaultProgramIdForComputePermissions={programId}
+              />
+            </div>
+          ))}
+          <h2>Store Meeting Duration {storeIds[10] && " ✅"}</h2>
           <StoreSecretForm
-            secretName={"my_int1"}
-            onNewStoredSecret={(secret) => setStoreId_my_int1(secret.storeId)}
-            nillionClient={client}
-            secretType='SecretInteger'
-            isLoading={false}
-            itemName=''
-            hidePermissions
-            defaultUserWithComputePermissions={userId}
-            defaultProgramIdForComputePermissions={programId}
-          />
-
-          <h2>Store my_int2 {storeId_my_int2 && " ✅"}</h2>
-          <StoreSecretForm
-            secretName={"my_int2"}
-            onNewStoredSecret={(secret) => setStoreId_my_int2(secret.storeId)}
+            secretName={"meeting_duration"}
+            onNewStoredSecret={(secret) => handleNewStoredSecret(10, secret)}
             nillionClient={client}
             secretType='SecretInteger'
             isLoading={false}
@@ -92,15 +108,14 @@ export default function Main() {
       <h1>4. Compute {computeResult && " ✅"}</h1>
       {client &&
         programId &&
-        storeId_my_int1 &&
-        storeId_my_int2 &&
+        storeIds.every((id) => id) &&
         partyId &&
         additionalComputeValues && (
           <ComputeForm
             nillionClient={client}
             programId={programId}
             additionalComputeValues={additionalComputeValues}
-            storeIds={[storeId_my_int1, storeId_my_int2]}
+            storeIds={storeIds}
             inputParties={[{ partyName, partyId }]}
             outputParties={[{ partyName, partyId }]}
             outputName={outputName}
