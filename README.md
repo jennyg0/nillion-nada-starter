@@ -1,11 +1,6 @@
-# Nillion Operations and Blind Compute Demo
+# Nillion Operations and Blind Compute Meeting Calculator Program
 
-This is a demo of the JavaScript Nillion Client working with payments connected to nillion-devnet or the Nillion Testnet.
-
-Notes
-
-- This uses a proxy /nilchain-proxy set up in the webpack that targets the json rpc from your .env file
-- A Nillion config is in the nillion.ts file. This config reads environment variables from your .env file, which can either point to Testnet or nillion-devnet values
+This project uses blind computation to calculate meeting costs based on attendees' salaries. Nillion ensures that personal salary data remains hidden and won't be revealed.
 
 ## Run nillion-devnet
 
